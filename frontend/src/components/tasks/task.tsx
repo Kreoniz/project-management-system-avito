@@ -1,5 +1,6 @@
 import { ITask } from '@/types';
 import { Priority } from './priority';
+import { Status } from './status';
 
 export function Task({
   id,
@@ -16,8 +17,9 @@ export function Task({
       <div>
         <p className="mb-2 text-xl font-bold">{title}</p>
         <p className="mb-2">{description.slice(0, 30)}...</p>
-        <div>
+        <div className="flex gap-2">
           <Priority priority={priority} />
+          <Status status={status} />
         </div>
       </div>
       <p>

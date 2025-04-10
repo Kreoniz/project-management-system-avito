@@ -6,7 +6,7 @@ export function Priority({ priority }: { priority: TPriority }) {
   let priorityJsx = <></>;
   if (priority === 'Low') {
     priorityJsx = (
-      <div className="text-primary/80 inline-flex items-center rounded-lg bg-green-300/50 px-2 py-1 text-sm">
+      <div className="text-primary/80 inline-flex h-full items-center rounded-lg bg-green-300/50 px-2 py-1 text-sm">
         <SignalLow className="text-primary/80 mb-1" />
         <span>Низкий</span>
       </div>
@@ -14,7 +14,7 @@ export function Priority({ priority }: { priority: TPriority }) {
   }
   if (priority === 'Medium') {
     priorityJsx = (
-      <div className="text-primary/80 inline-flex items-center rounded-lg bg-yellow-300/50 px-2 py-1 text-sm">
+      <div className="text-primary/80 inline-flex h-full items-center rounded-lg bg-yellow-300/50 px-2 py-1 text-sm">
         <SignalMedium className="text-primary/80 mb-1" />
         <span>Средний</span>
       </div>
@@ -22,7 +22,7 @@ export function Priority({ priority }: { priority: TPriority }) {
   }
   if (priority === 'High') {
     priorityJsx = (
-      <div className="text-primary/80 inline-flex items-center rounded-lg bg-red-300/50 px-2 py-1 text-sm">
+      <div className="text-primary/80 inline-flex h-full items-center rounded-lg bg-red-300/50 px-2 py-1 text-sm">
         <SignalHigh className="text-primary/80 mb-1" />
         <span>Высокий</span>
       </div>
