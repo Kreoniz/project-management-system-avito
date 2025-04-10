@@ -9,3 +9,13 @@ export const getBoards = async () => {
     throw error;
   }
 };
+
+export const getTasks = async () => {
+  try {
+    const response = await axiosInstance.get('/tasks');
+    return response.data;
+  } catch (error) {
+    console.error('Не получилось получить информацию о тикетах:', error);
+    throw error;
+  }
+};
