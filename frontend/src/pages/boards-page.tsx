@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { getBoards } from '@/api';
 import { IBoard } from '@/types';
+import { Board } from '@/components/boards/';
 
-export function BoardPage() {
+export function BoardsPage() {
   const [boards, setBoards] = useState([]);
 
   useEffect(() => {
@@ -19,11 +20,9 @@ export function BoardPage() {
   }, []);
 
   return (
-    <div>
+    <div className="flex flex-col gap-3">
       {boards.map((board: IBoard) => (
-        <div className="mb-2 text-lg" key={board.id}>
-          {board.name}
-        </div>
+        <Board key={board.id} {...board} />
       ))}
     </div>
   );

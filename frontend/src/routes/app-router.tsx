@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router';
 import { MainLayout } from '@/layouts/main-layout';
-import { HomePage, TaskPage, BoardPage } from '@/pages';
+import { HomePage, TasksPage, BoardsPage, BoardPage } from '@/pages';
 
 export function AppRouter() {
   return (
@@ -8,8 +8,9 @@ export function AppRouter() {
       <Routes>
         <Route element={<MainLayout />}>
           <Route index element={<HomePage />} />
-          <Route path="issues" element={<TaskPage />} />
-          <Route path="boards" element={<BoardPage />} />
+          <Route path="issues" element={<TasksPage />} />
+          <Route path="boards" element={<BoardsPage />} />
+          <Route path="board/:id" element={<BoardPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

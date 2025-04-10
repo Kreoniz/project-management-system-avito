@@ -5,7 +5,6 @@ import {
   SheetContent,
   SheetTrigger,
   SheetTitle,
-  SheetHeader,
   SheetDescription,
 } from '@/components/ui/sheet';
 import { Menu } from 'lucide-react';
@@ -20,7 +19,7 @@ export default function Header() {
 
         <nav className="hidden text-lg font-semibold md:flex md:gap-6">
           <NavLink
-            to="issues"
+            to="/issues"
             className={({ isActive }) =>
               `hover:underline ${isActive ? 'text-primary' : 'text-gray-500'}`
             }
@@ -29,7 +28,7 @@ export default function Header() {
           </NavLink>
 
           <NavLink
-            to="boards"
+            to="/boards"
             className={({ isActive }) =>
               `hover:underline ${isActive ? 'text-primary' : 'text-gray-500'}`
             }
@@ -56,7 +55,7 @@ export default function Header() {
 
               <div className="mt-2 flex flex-col text-lg font-semibold">
                 <NavLink
-                  to="issues"
+                  to="/issues"
                   className={({ isActive }) =>
                     `my-2 hover:underline ${isActive ? 'text-primary' : 'text-gray-500'}`
                   }
@@ -64,7 +63,7 @@ export default function Header() {
                   Все тикеты
                 </NavLink>
                 <NavLink
-                  to="boards"
+                  to="/boards"
                   className={({ isActive }) =>
                     `my-2 hover:underline ${isActive ? 'text-primary' : 'text-gray-500'}`
                   }
@@ -72,7 +71,7 @@ export default function Header() {
                   Проекты
                 </NavLink>
                 <Button asChild className="text-md mt-4 w-full p-4">
-                  <Link to="issues/create">Создать тикет</Link>
+                  <Link to="/issues/create">Создать тикет</Link>
                 </Button>
               </div>
             </SheetContent>

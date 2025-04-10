@@ -1,3 +1,4 @@
-export * from './project-page';
-export * from './task-page';
+export * from './board-page';
+export * from './boards-page';
 export * from './home-page';
+export * from './tasks-page';
