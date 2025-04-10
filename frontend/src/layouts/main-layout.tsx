@@ -1,7 +1,7 @@
 import Header from '@/components/layout/header';
 import { Outlet } from 'react-router';
 
-export function Layout() {
+export function MainLayout() {
   return (
     <>
       <Header />
