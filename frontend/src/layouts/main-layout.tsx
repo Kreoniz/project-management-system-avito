@@ -5,7 +5,7 @@ export function MainLayout() {
   return (
     <>
       <Header />
-      <main className="m-4">
+      <main className="mx-2 my-4 sm:mx-4">
         <div className="mx-auto max-w-7xl">
           <Outlet />
         </div>

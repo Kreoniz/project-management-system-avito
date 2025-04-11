@@ -61,7 +61,7 @@ export function BoardPage() {
         </BreadcrumbList>
       </Breadcrumb>
 
-      <div className="overflow-x-scroll">
+      <div className="rounded-lg outline max-lg:overflow-x-scroll">
         <div className="flex gap-4 lg:grid lg:grid-cols-3">
           {Object.entries(columns).map(([status, tasks]) => (
             <div key={status} className="bg-background min-w-xs rounded-lg border p-4 shadow-sm">
