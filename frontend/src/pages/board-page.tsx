@@ -63,8 +63,8 @@ export function BoardPage() {
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {Object.entries(columns).map(([status, tasks]) => (
-          <div key={status} className="rounded-lg border border-gray-300 bg-white p-4 shadow-sm">
-            <h3 className="mb-3 text-lg font-semibold text-gray-700">
+          <div key={status} className="bg-background rounded-lg border p-4 shadow-sm">
+            <h3 className="text-muted-foreground mb-3 text-lg font-semibold">
               {columnLabels[status as keyof typeof columnLabels]}
             </h3>
             <div className="flex flex-col gap-3">
