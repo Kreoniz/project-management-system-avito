@@ -31,9 +31,7 @@ export default function Header() {
             to="/boards"
             className={() =>
               `hover:text-primary transition-colors hover:underline ${
-                location.pathname.startsWith('/boards') || location.pathname.startsWith('/board/')
-                  ? 'text-primary'
-                  : 'text-muted-foreground'
+                location.pathname.startsWith('/boards') ? 'text-primary' : 'text-muted-foreground'
               }`
             }
           >
@@ -70,8 +68,7 @@ export default function Header() {
                   to="/boards"
                   className={() =>
                     `hover:text-primary transition-colors hover:underline ${
-                      location.pathname.startsWith('/boards') ||
-                      location.pathname.startsWith('/board/')
+                      location.pathname.startsWith('/boards')
                         ? 'text-primary'
                         : 'text-muted-foreground'
                     }`
