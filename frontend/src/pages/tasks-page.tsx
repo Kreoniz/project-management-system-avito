@@ -4,19 +4,20 @@ import { ITask } from '@/types';
 import { Task } from '@/components/tasks';
 
 export function TasksPage() {
-  const [tasks, settasks] = useState([]);
+  const [tasks, setTasks] = useState([]);
 
   useEffect(() => {
-    const fetchtasks = async () => {
+    const fetchTasks = async () => {
       try {
         const data = await getTasks();
-        settasks(data);
+        setTasks(data);
+        console.log(data);
       } catch (err) {
         console.error(err);
       }
     };
 
-    fetchtasks();
+    fetchTasks();
   }, []);
 
   return (

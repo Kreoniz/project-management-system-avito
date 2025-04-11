@@ -29,8 +29,8 @@ export default function Header() {
 
           <NavLink
             to="/boards"
-            className={({ isActive }) =>
-              `hover:underline ${isActive ? 'text-primary' : 'text-gray-500'}`
+            className={() =>
+              `hover:underline ${location.pathname.startsWith('/boards') || location.pathname.startsWith('/board/') ? 'text-primary' : 'text-gray-500'}`
             }
           >
             Проекты
@@ -64,8 +64,8 @@ export default function Header() {
                 </NavLink>
                 <NavLink
                   to="/boards"
-                  className={({ isActive }) =>
-                    `my-2 hover:underline ${isActive ? 'text-primary' : 'text-gray-500'}`
+                  className={() =>
+                    `my-2 hover:underline ${location.pathname.startsWith('/boards') || location.pathname.startsWith('/board/') ? 'text-primary' : 'text-gray-500'}`
                   }
                 >
                   Проекты
