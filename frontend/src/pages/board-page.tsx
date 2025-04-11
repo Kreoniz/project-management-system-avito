@@ -61,21 +61,23 @@ export function BoardPage() {
         </BreadcrumbList>
       </Breadcrumb>
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {Object.entries(columns).map(([status, tasks]) => (
-          <div key={status} className="bg-background rounded-lg border p-4 shadow-sm">
-            <h3 className="text-muted-foreground mb-3 text-lg font-semibold">
-              {columnLabels[status as keyof typeof columnLabels]}
-            </h3>
-            <div className="flex flex-col gap-3">
-              {tasks.length > 0 ? (
-                tasks.map((task) => <Task key={task.id} {...task} variant="compact" />)
-              ) : (
-                <p className="text-sm text-gray-500 italic">Нет задач</p>
-              )}
+      <div className="overflow-x-scroll">
+        <div className="flex gap-4 lg:grid lg:grid-cols-3">
+          {Object.entries(columns).map(([status, tasks]) => (
+            <div key={status} className="bg-background min-w-xs rounded-lg border p-4 shadow-sm">
+              <h3 className="text-muted-foreground mb-3 text-lg font-semibold">
+                {columnLabels[status as keyof typeof columnLabels]}
+              </h3>
+              <div className="flex flex-col gap-3">
+                {tasks.length > 0 ? (
+                  tasks.map((task) => <Task key={task.id} {...task} variant="compact" />)
+                ) : (
+                  <p className="text-sm text-gray-500 italic">Нет задач</p>
+                )}
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </div>
   );
