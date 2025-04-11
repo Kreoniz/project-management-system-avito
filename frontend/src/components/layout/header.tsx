@@ -21,7 +21,7 @@ export default function Header() {
           <NavLink
             to="/issues"
             className={({ isActive }) =>
-              `hover:underline ${isActive ? 'text-primary' : 'text-gray-500'}`
+              `hover:text-primary transition-colors hover:underline ${isActive ? 'text-primary' : 'text-gray-500'}`
             }
           >
             Все тикеты
@@ -30,7 +30,13 @@ export default function Header() {
           <NavLink
             to="/boards"
             className={() =>
-              `hover:underline ${location.pathname.startsWith('/boards') || location.pathname.startsWith('/board/') ? 'text-primary' : 'text-gray-500'}`
+              `hover:text-primary transition-colors hover:underline ${
+                location.pathname.startsWith('/boards')
+                  ? 'text-primary'
+                  : location.pathname.startsWith('/board/')
+                    ? 'text-gray-700'
+                    : 'text-gray-500'
+              }`
             }
           >
             Проекты
@@ -57,7 +63,7 @@ export default function Header() {
                 <NavLink
                   to="/issues"
                   className={({ isActive }) =>
-                    `my-2 hover:underline ${isActive ? 'text-primary' : 'text-gray-500'}`
+                    `hover:text-primary my-2 transition-colors hover:underline ${isActive ? 'text-primary' : 'text-gray-500'}`
                   }
                 >
                   Все тикеты
@@ -65,7 +71,13 @@ export default function Header() {
                 <NavLink
                   to="/boards"
                   className={() =>
-                    `my-2 hover:underline ${location.pathname.startsWith('/boards') || location.pathname.startsWith('/board/') ? 'text-primary' : 'text-gray-500'}`
+                    `hover:text-primary transition-colors hover:underline ${
+                      location.pathname.startsWith('/boards')
+                        ? 'text-primary'
+                        : location.pathname.startsWith('/board/')
+                          ? 'text-gray-700'
+                          : 'text-gray-500'
+                    }`
                   }
                 >
                   Проекты

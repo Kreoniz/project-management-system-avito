@@ -4,6 +4,15 @@ import { ITask } from '@/types';
 import { Task } from '@/components/tasks';
 import { useLocation, useParams } from 'react-router';
 
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from '@/components/ui/breadcrumb';
+
 export function BoardPage() {
   const [tasks, setTasks] = useState<ITask[]>([]);
   const { id } = useParams<{ id: string }>();
@@ -38,7 +47,19 @@ export function BoardPage() {
 
   return (
     <div className="flex flex-col gap-4 p-4">
-      <h2 className="text-2xl font-bold">{state?.name ?? 'Board'}</h2>
+      <Breadcrumb>
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink className="text-lg font-bold" href="/boards">
+              Проекты
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbPage className="text-lg font-bold">{state?.name}</BreadcrumbPage>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {Object.entries(columns).map(([status, tasks]) => (
