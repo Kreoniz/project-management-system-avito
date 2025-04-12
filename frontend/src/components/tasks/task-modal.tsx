@@ -25,25 +25,39 @@ import { Button } from '@/components/ui/button';
 import { Status } from './status';
 import { Priority } from './priority';
 import { useForm } from 'react-hook-form';
-import { useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { createTask, updateTask } from '@/api';
 
-const defaultValues = {
+type FormValues = {
+  title: string;
+  description: string;
+  priority: string;
+  status: string;
+  assigneeId: string;
+  boardId: string;
+};
+
+const defaultValues: FormValues = {
   title: '',
   description: '',
   priority: 'Low',
   status: 'Backlog',
-  assigneeId: -1,
-  boardId: -1,
+  assigneeId: '-1',
+  boardId: '-1',
 };
 
 export function TaskModal() {
   const { modalMode, isOpen, closeModal, currentTask } = useTaskModalStore();
   const { boards, fetchBoards, users, fetchUsers, addTask, editTask } = useAppStore();
 
-  const form = useForm({
+  const form = useForm<FormValues>({
     defaultValues,
   });
+
+  const isEditing = !!currentTask?.id;
+  const storageKey = isEditing ? `task-form-edit-${currentTask.id}` : 'task-form-create';
+  const previousStorageKeyRef = useRef<string | null>(null);
+  const [isInitialized, setIsInitialized] = useState(false);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -60,49 +74,105 @@ export function TaskModal() {
   }, [fetchBoards, fetchUsers]);
 
   useEffect(() => {
-    if (currentTask) {
-      form.reset({
-        title: currentTask.title || '',
-        description: currentTask.description || '',
-        priority: currentTask.priority || 'Low',
-        status: currentTask.status || 'Backlog',
-        assigneeId: currentTask.assignee?.id || -1,
-        boardId: currentTask.boardId || -1,
-      });
-    } else {
-      form.reset(defaultValues);
+    if (!isOpen) {
+      setIsInitialized(false);
+      return;
     }
-  }, [currentTask, form]);
 
-  function onSubmit(values: any) {
+    if (previousStorageKeyRef.current && previousStorageKeyRef.current !== storageKey) {
+      localStorage.removeItem(previousStorageKeyRef.current);
+    }
+    previousStorageKeyRef.current = storageKey;
+
+    const savedForm = localStorage.getItem(storageKey);
+    const parsed = savedForm ? JSON.parse(savedForm) : null;
+
+    const values =
+      parsed ||
+      (currentTask
+        ? {
+            title: currentTask.title || '',
+            description: currentTask.description || '',
+            priority: currentTask.priority || 'Low',
+            status: currentTask.status || 'Backlog',
+            assigneeId: currentTask.assignee?.id ? String(currentTask.assignee.id) : '-1',
+            boardId: currentTask.boardId ? String(currentTask.boardId) : '-1',
+          }
+        : defaultValues);
+
+    form.reset(values);
+    setIsInitialized(true);
+  }, [isOpen, currentTask, form, storageKey]);
+
+  useEffect(() => {
+    if (!isInitialized) return;
+
+    const subscription = form.watch((values) => {
+      localStorage.setItem(storageKey, JSON.stringify(values));
+    });
+
+    return () => subscription.unsubscribe();
+  }, [form, storageKey, isInitialized]);
+
+  function handleReset() {
+    const values = currentTask
+      ? {
+          title: currentTask.title || '',
+          description: currentTask.description || '',
+          priority: currentTask.priority || 'Low',
+          status: currentTask.status || 'Backlog',
+          assigneeId: currentTask.assignee?.id ? String(currentTask.assignee.id) : '-1',
+          boardId: currentTask.boardId ? String(currentTask.boardId) : '-1',
+        }
+      : defaultValues;
+
+    form.reset(values);
+    localStorage.removeItem(storageKey);
+  }
+
+  function onSubmit(values: FormValues) {
     const controller = new AbortController();
     const payload = {
       ...values,
-      boardId: values.boardId ? Number(values.boardId) : undefined,
-      assigneeId: values.assigneeId ? Number(values.assigneeId) : undefined,
+      boardId: values.boardId !== '-1' ? Number(values.boardId) : null,
+      assigneeId: values.assigneeId !== '-1' ? Number(values.assigneeId) : null,
     };
+
+    const cleanup = () => {
+      localStorage.removeItem(storageKey);
+      closeModal();
+    };
+
     if (modalMode === 'default') {
       createTask(payload, controller).then((res) => {
-        addTask(res.id, values.boardId, controller);
-        closeModal();
+        addTask(res.id, payload.boardId, controller);
+        cleanup();
       });
-    } else {
-      if (currentTask?.id) {
-        updateTask(payload, currentTask?.id, controller).then(() => {
-          if (currentTask?.id) {
-            editTask(currentTask.id, values.boardId, controller);
-            closeModal();
-          }
-        });
-      }
+    } else if (currentTask?.id) {
+      updateTask(payload, currentTask?.id, controller).then(() => {
+        if (currentTask.id) {
+          editTask(currentTask.id, payload.boardId, controller);
+          cleanup();
+        }
+      });
     }
+  }
+  if (!isInitialized && isOpen) {
+    return null;
   }
 
   return (
     <Dialog open={isOpen} onOpenChange={closeModal}>
       <DialogContent className="max-sm:p-2">
         <DialogHeader>
-          <DialogTitle>{currentTask ? 'Редактирование тикета' : 'Создание тикета'}</DialogTitle>
+          <DialogTitle className="flex items-center gap-2">
+            {currentTask ? 'Редактирование тикета' : 'Создание тикета'}
+            {localStorage.getItem(storageKey) && (
+              <span className="rounded-md border border-yellow-500 px-2 py-0.5 text-xs text-yellow-600">
+                Черновик
+              </span>
+            )}
+          </DialogTitle>
         </DialogHeader>
 
         <Form {...form}>
@@ -148,7 +218,7 @@ export function TaskModal() {
                   <Select
                     disabled={modalMode === 'board'}
                     onValueChange={field.onChange}
-                    defaultValue={String(field.value)}
+                    value={field.value}
                   >
                     <FormControl>
                       <SelectTrigger className="w-full">
@@ -178,11 +248,7 @@ export function TaskModal() {
                 render={({ field }) => (
                   <FormItem className="flex-1">
                     <FormLabel className="text-muted-foreground">Приоритет</FormLabel>
-                    <Select
-                      disabled={modalMode === 'default'}
-                      onValueChange={field.onChange}
-                      value={field.value}
-                    >
+                    <Select onValueChange={field.onChange} value={field.value}>
                       <FormControl>
                         <SelectTrigger className="w-full">
                           <SelectValue placeholder="Выбрать приоритет" />
@@ -251,7 +317,7 @@ export function TaskModal() {
               render={({ field }) => (
                 <FormItem className="flex-1">
                   <FormLabel className="text-muted-foreground">Исполнитель</FormLabel>
-                  <Select defaultValue={String(field.value)} onValueChange={field.onChange}>
+                  <Select onValueChange={field.onChange} value={field.value}>
                     <FormControl>
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder="Выбрать исполнителя" />
@@ -285,7 +351,7 @@ export function TaskModal() {
             )}
 
             <div className="flex gap-2">
-              <Button type="button" className="flex-1" onClick={() => form.reset(defaultValues)}>
+              <Button type="button" className="flex-1" onClick={handleReset}>
                 Сбросить
               </Button>
 

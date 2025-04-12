@@ -76,7 +76,9 @@ export function BoardPage() {
                 ) : (
                   <>
                     {tasks.length > 0 ? (
-                      tasks.map((task) => <Task key={task.id} {...task} variant="compact" />)
+                      tasks.map((task) => (
+                        <Task key={task.id} {...task} boardId={Number(id)} variant="compact" />
+                      ))
                     ) : (
                       <p className="text-sm text-gray-500 italic">Нет задач</p>
                     )}

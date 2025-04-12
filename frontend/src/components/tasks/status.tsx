@@ -8,7 +8,7 @@ export function Status({ status }: { status: TStatus }) {
     statusJsx = (
       <div className="text-primary/80 inline-flex h-full items-center rounded-lg bg-gray-400/50 px-2 py-1 text-sm">
         <FileText className="text-primary/80 mr-1" />
-        <span>To Do</span>
+        <span>To do</span>
       </div>
     );
   }

@@ -11,8 +11,8 @@ interface TaskStore {
   fetchBoardTasks: (boardId: number, controller: AbortController) => Promise<void>;
   fetchBoards: (controller: AbortController) => Promise<void>;
   fetchUsers: (controller: AbortController) => Promise<void>;
-  addTask: (id: number, boardId: number, controller: AbortController) => void;
-  editTask: (id: number, boardId: number, controller: AbortController) => void;
+  addTask: (id: number, boardId: number | null, controller: AbortController) => void;
+  editTask: (id: number, boardId: number | null, controller: AbortController) => void;
 }
 
 export const useAppStore = create<TaskStore>((set) => ({

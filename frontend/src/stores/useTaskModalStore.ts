@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 import { ITask } from '@/types';
 
 type TModalMode = 'board' | 'all' | 'default';
@@ -11,10 +12,21 @@ type TaskModalState = {
   closeModal: () => void;
 };
 
-export const useTaskModalStore = create<TaskModalState>((set) => ({
-  modalMode: 'default',
-  isOpen: false,
-  currentTask: null,
-  openModal: (task, mode) => set({ isOpen: true, currentTask: task, modalMode: mode }),
-  closeModal: () => set({ isOpen: false }),
-}));
+export const useTaskModalStore = create<TaskModalState>()(
+  persist(
+    (set) => ({
+      modalMode: 'default',
+      isOpen: false,
+      currentTask: null,
+      openModal: (task, mode) => set({ isOpen: true, currentTask: task, modalMode: mode }),
+      closeModal: () => set({ isOpen: false }),
+    }),
+    {
+      name: 'task-modal-store',
+      partialize: (state) => ({
+        modalMode: state.modalMode,
+        currentTask: state.currentTask,
+      }),
+    }
+  )
+);

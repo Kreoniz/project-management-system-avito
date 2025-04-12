@@ -42,7 +42,7 @@ export function Task({
         className={`flex w-full flex-wrap items-center justify-between gap-3 sm:w-auto sm:flex-col sm:justify-between sm:text-right ${variant === 'compact' ? 'items-start' : 'sm:items-end'}`}
       >
         <div className="flex flex-wrap gap-2">
-          {boardName && (
+          {location.pathname.startsWith('/issues') && (
             <NavLink
               to={`/board/${boardId}`}
               state={{ name: boardName }}
