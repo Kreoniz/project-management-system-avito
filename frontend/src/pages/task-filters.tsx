@@ -42,7 +42,7 @@ export function TaskFilters({ onChange, statuses, projects }: TaskFiltersProps) 
       />
       <div className="flex gap-2">
         <Select value={status} onValueChange={setStatus}>
-          <SelectTrigger className="w-[180px]">
+          <SelectTrigger className="w-[125px] flex-1 lg:w-[180px]">
             <SelectValue placeholder="Фильтр по статусу" />
           </SelectTrigger>
           <SelectContent>
@@ -56,7 +56,7 @@ export function TaskFilters({ onChange, statuses, projects }: TaskFiltersProps) 
         </Select>
 
         <Select value={project} onValueChange={setProject}>
-          <SelectTrigger className="w-[300px]">
+          <SelectTrigger className="w-[175px] flex-1 sm:w-[200px] lg:w-[300px]">
             <SelectValue placeholder="Фильтр по проекту" />
           </SelectTrigger>
           <SelectContent>
