@@ -8,13 +8,18 @@ export function TasksPage() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    const controller = new AbortController();
     async function load() {
       setIsLoading(true);
-      await fetchTasks();
+      await fetchTasks(controller);
       setIsLoading(false);
     }
 
     load();
+
+    return () => {
+      controller.abort();
+    };
   }, [fetchTasks]);
 
   return (

@@ -20,13 +20,19 @@ export function BoardPage() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    const controller = new AbortController();
+
     async function load() {
       setIsLoading(true);
-      await fetchBoardTasks(Number(id));
+      await fetchBoardTasks(Number(id), controller);
       setIsLoading(false);
     }
 
     load();
+
+    return () => {
+      controller.abort();
+    };
   }, [id, fetchBoardTasks]);
 
   const columns = {

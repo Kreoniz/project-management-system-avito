@@ -9,13 +9,18 @@ export function BoardsPage() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    const controller = new AbortController();
     async function load() {
       setIsLoading(true);
-      await fetchBoards();
+      await fetchBoards(controller);
       setIsLoading(false);
     }
 
     load();
+
+    return () => {
+      controller.abort();
+    };
   }, [fetchBoards]);
 
   return (

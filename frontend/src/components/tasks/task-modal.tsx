@@ -46,9 +46,18 @@ export function TaskModal() {
   });
 
   useEffect(() => {
-    fetchBoards();
-    fetchUsers();
-  }, []);
+    const controller = new AbortController();
+    async function load() {
+      await fetchBoards(controller);
+      await fetchUsers(controller);
+    }
+
+    load();
+
+    return () => {
+      controller.abort();
+    };
+  }, [fetchBoards, fetchUsers]);
 
   useEffect(() => {
     if (currentTask) {

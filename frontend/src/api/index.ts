@@ -2,9 +2,9 @@ import { TStatus } from '@/types';
 import { axiosInstance } from './client';
 import { toast } from 'sonner';
 
-export async function getBoards() {
+export async function getBoards({ signal }: { signal: AbortSignal }) {
   try {
-    const response = await axiosInstance.get('/boards');
+    const response = await axiosInstance.get('/boards', { signal });
     return response.data;
   } catch (error) {
     console.error('Не получилось получить информацию о проектах:', error);
@@ -12,9 +12,9 @@ export async function getBoards() {
   }
 }
 
-export async function getTasks() {
+export async function getTasks({ signal }: { signal: AbortSignal }) {
   try {
-    const response = await axiosInstance.get('/tasks');
+    const response = await axiosInstance.get('/tasks', { signal });
     return response.data;
   } catch (error) {
     console.error('Не получилось получить информацию о тикетах:', error);
@@ -22,9 +22,9 @@ export async function getTasks() {
   }
 }
 
-export async function getBoardTasks(boardId: number) {
+export async function getBoardTasks(boardId: number, { signal }: { signal: AbortSignal }) {
   try {
-    const response = await axiosInstance.get(`/boards/${boardId}`);
+    const response = await axiosInstance.get(`/boards/${boardId}`, { signal });
     return response.data;
   } catch (error) {
     console.error('Не получилось получить информацию о тикетах в проекте:', error);
@@ -32,9 +32,9 @@ export async function getBoardTasks(boardId: number) {
   }
 }
 
-export async function createTask(data: any) {
+export async function createTask(data: any, { signal }: { signal: AbortSignal }) {
   try {
-    const response = await axiosInstance.post('/tasks/create', { ...data });
+    const response = await axiosInstance.post('/tasks/create', { ...data }, { signal });
     return response.data;
   } catch (error) {
     const errorText = 'Не получилось создать тикет';
@@ -44,9 +44,9 @@ export async function createTask(data: any) {
   }
 }
 
-export async function updateTask(data: any, id: number) {
+export async function updateTask(data: any, id: number, { signal }: { signal: AbortSignal }) {
   try {
-    const response = await axiosInstance.put(`/tasks/update/${id}`, { ...data });
+    const response = await axiosInstance.put(`/tasks/update/${id}`, { ...data }, { signal });
     return response.data;
   } catch (error) {
     const errorText = 'Не получилось изменить тикет';
@@ -56,9 +56,13 @@ export async function updateTask(data: any, id: number) {
   }
 }
 
-export async function updateTaskStatus(id: number, status: TStatus) {
+export async function updateTaskStatus(
+  id: number,
+  status: TStatus,
+  { signal }: { signal: AbortSignal }
+) {
   try {
-    const response = await axiosInstance.put(`/tasks/updateStatus/${id}`, { status });
+    const response = await axiosInstance.put(`/tasks/updateStatus/${id}`, { status }, { signal });
     return response.data;
   } catch (error) {
     console.error('Не получилось изменить статус тикета:', error);
@@ -66,9 +70,9 @@ export async function updateTaskStatus(id: number, status: TStatus) {
   }
 }
 
-export async function getUsers() {
+export async function getUsers({ signal }: { signal: AbortSignal }) {
   try {
-    const response = await axiosInstance.get('/users');
+    const response = await axiosInstance.get('/users', { signal });
     return response.data;
   } catch (error) {
     console.error('Не получилось получить информацию о пользователях:', error);
@@ -76,9 +80,9 @@ export async function getUsers() {
   }
 }
 
-export async function getTaskById(id: number) {
+export async function getTaskById(id: number, { signal }: { signal: AbortSignal }) {
   try {
-    const response = await axiosInstance.get(`/tasks/${id}`);
+    const response = await axiosInstance.get(`/tasks/${id}`, { signal });
     return response.data;
   } catch (error) {
     console.error('Не получилось получить информацию о задаче:', error);

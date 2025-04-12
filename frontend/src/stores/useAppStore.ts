@@ -7,10 +7,10 @@ interface TaskStore {
   boardTasks: ITask[];
   boards: IBoard[];
   users: IUser[];
-  fetchTasks: () => Promise<void>;
-  fetchBoardTasks: (boardId: number) => Promise<void>;
-  fetchBoards: () => Promise<void>;
-  fetchUsers: () => Promise<void>;
+  fetchTasks: (controller: AbortController) => Promise<void>;
+  fetchBoardTasks: (boardId: number, controller: AbortController) => Promise<void>;
+  fetchBoards: (controller: AbortController) => Promise<void>;
+  fetchUsers: (controller: AbortController) => Promise<void>;
   addTask: (id: number, boardId: number) => void;
   editTask: (id: number, boardId: number) => void;
 }
@@ -21,39 +21,50 @@ export const useAppStore = create<TaskStore>((set) => ({
   boards: [],
   users: [],
 
-  fetchTasks: async () => {
+  fetchTasks: async (controller) => {
     try {
-      const data = await getTasks();
+      const data = await getTasks({ signal: controller?.signal });
       set({ tasks: data });
-    } catch (err) {
-      console.error(err);
+    } catch (err: any) {
+      if (err.name !== 'AbortError') {
+        console.error(err);
+      }
     }
   },
 
-  fetchBoardTasks: async (boardId) => {
+  fetchBoardTasks: async (boardId, controller) => {
     try {
-      const data = await getBoardTasks(boardId);
+      const data = await getBoardTasks(boardId, { signal: controller?.signal });
       set({ boardTasks: data });
-    } catch (err) {
-      console.error(err);
+    } catch (err: any) {
+      if (err.name !== 'AbortError') {
+        console.error(err);
+      }
     }
   },
-  fetchBoards: async () => {
+
+  fetchBoards: async (controller) => {
     try {
-      const data = await getBoards();
+      const data = await getBoards({ signal: controller?.signal });
       set({ boards: data });
-    } catch (err) {
-      console.error(err);
+    } catch (err: any) {
+      if (err.name !== 'AbortError') {
+        console.error(err);
+      }
     }
   },
-  fetchUsers: async () => {
+
+  fetchUsers: async (controller) => {
     try {
-      const data = await getUsers();
+      const data = await getUsers({ signal: controller?.signal });
       set({ users: data });
-    } catch (err) {
-      console.error(err);
+    } catch (err: any) {
+      if (err.name !== 'AbortError') {
+        console.error(err);
+      }
     }
   },
+
   addTask: async (id, boardId) => {
     const task = await getTaskById(id);
     set((state) => ({
@@ -61,6 +72,7 @@ export const useAppStore = create<TaskStore>((set) => ({
       boardTasks: [...state.boardTasks, { ...task, boardId }],
     }));
   },
+
   editTask: async (id, boardId) => {
     const task = await getTaskById(id);
     set((state) => ({
