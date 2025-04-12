@@ -15,13 +15,13 @@ const status_labels: Record<string, string> = {
   Backlog: 'To do',
 };
 
-interface TaskFiltersProps {
+interface TaskSearchFiltersProps {
   onChange: (filters: { searchTerm: string; status: string; project: string }) => void;
   statuses: string[];
   projects: { id: string; name: string }[];
 }
 
-export function TaskFilters({ onChange, statuses, projects }: TaskFiltersProps) {
+export function TaskSearchFilters({ onChange, statuses, projects }: TaskSearchFiltersProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [status, setStatus] = useState('all');
   const [project, setProject] = useState('all');

@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useAppStore } from '@/stores';
 import { Task } from '@/components/tasks';
 import { TaskSkeleton } from '@/components/skeletons';
-import { TaskFilters } from './task-filters';
+import { TaskSearchFilters } from '@/components/search';
 
 export function TasksPage() {
   const { tasks, fetchTasks } = useAppStore();
@@ -49,7 +49,7 @@ export function TasksPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <TaskFilters onChange={setFilters} statuses={statuses} projects={projectOptions} />
+      <TaskSearchFilters onChange={setFilters} statuses={statuses} projects={projectOptions} />
       <div className="flex flex-col gap-3">
         {isLoading ? (
           [...Array(10)].map((_, index) => <TaskSkeleton key={index} />)
