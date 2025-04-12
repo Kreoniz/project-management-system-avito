@@ -11,7 +11,6 @@ export function TasksPage() {
       try {
         const data = await getTasks();
         setTasks(data);
-        console.log(data);
       } catch (err) {
         console.error(err);
       }

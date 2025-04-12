@@ -50,7 +50,7 @@ export function BoardPage() {
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
-            <BreadcrumbLink className="text-lg font-bold" href="/boards">
+            <BreadcrumbLink className="text-lg font-bold hover:underline" href="/boards">
               Проекты
             </BreadcrumbLink>
           </BreadcrumbItem>

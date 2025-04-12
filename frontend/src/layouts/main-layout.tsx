@@ -1,5 +1,6 @@
 import Header from '@/components/layout/header';
 import { Outlet } from 'react-router';
+import { TaskModal } from '@/components/tasks';
 
 export function MainLayout() {
   return (
@@ -9,6 +10,8 @@ export function MainLayout() {
         <div className="mx-auto max-w-7xl">
           <Outlet />
         </div>
+
+        <TaskModal />
       </main>
     </>
   );

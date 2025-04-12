@@ -1,4 +1,4 @@
-import { Link, NavLink } from 'react-router';
+import { NavLink } from 'react-router';
 import { Button } from '@/components/ui/button';
 import {
   Sheet,
@@ -8,14 +8,16 @@ import {
   SheetDescription,
 } from '@/components/ui/sheet';
 import { Menu } from 'lucide-react';
+import { useTaskModalStore } from '@/stores';
 
 export default function Header() {
+  const { openModal } = useTaskModalStore();
   return (
-    <header className="bg-background sticky top-0 z-50 w-full border-b px-4 py-3 shadow-sm">
+    <header className="bg-background sticky top-0 z-50 w-full border-b px-2 py-3 shadow-sm sm:px-4">
       <div className="mx-auto flex max-w-7xl items-center justify-between">
-        <Link to="" className="text-2xl font-bold hover:underline">
+        <NavLink to="" className="text-2xl font-bold hover:underline">
           Э!-Тикет
-        </Link>
+        </NavLink>
 
         <nav className="hidden text-lg font-semibold md:flex md:gap-6">
           <NavLink
@@ -40,9 +42,7 @@ export default function Header() {
         </nav>
 
         <div className="hidden items-center md:flex">
-          <Button asChild>
-            <Link to="/issues/create">Создать тикет</Link>
-          </Button>
+          <Button onClick={() => openModal(null, 'default')}>Создать тикет</Button>
         </div>
 
         <div className="md:hidden">
@@ -76,9 +76,7 @@ export default function Header() {
                 >
                   Проекты
                 </NavLink>
-                <Button asChild className="text-md mt-4 w-full p-4">
-                  <Link to="/issues/create">Создать тикет</Link>
-                </Button>
+                <Button className="text-md mt-4 w-full p-4">Создать тикет</Button>
               </div>
             </SheetContent>
 
