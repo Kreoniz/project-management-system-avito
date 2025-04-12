@@ -11,8 +11,8 @@ interface TaskStore {
   fetchBoardTasks: (boardId: number) => Promise<void>;
   fetchBoards: () => Promise<void>;
   fetchUsers: () => Promise<void>;
-  addTask: (id: number) => void;
-  editTask: (id: number) => void;
+  addTask: (id: number, boardId: number) => void;
+  editTask: (id: number, boardId: number) => void;
 }
 
 export const useAppStore = create<TaskStore>((set) => ({
@@ -54,15 +54,18 @@ export const useAppStore = create<TaskStore>((set) => ({
       console.error(err);
     }
   },
-  addTask: async (id) => {
-    const task = await getTaskById(id);
-    set((state) => ({ tasks: [...state.tasks, task], boardTasks: [...state.boardTasks, task] }));
-  },
-  editTask: async (id) => {
+  addTask: async (id, boardId) => {
     const task = await getTaskById(id);
     set((state) => ({
-      tasks: [...state.tasks.filter((t) => t.id !== id), task],
-      boardTasks: [...state.boardTasks.filter((t) => t.id !== id), task],
+      tasks: [...state.tasks, { ...task, boardId }],
+      boardTasks: [...state.boardTasks, { ...task, boardId }],
+    }));
+  },
+  editTask: async (id, boardId) => {
+    const task = await getTaskById(id);
+    set((state) => ({
+      tasks: [...state.tasks.filter((t) => t.id !== id), { ...task, boardId }],
+      boardTasks: [...state.boardTasks.filter((t) => t.id !== id), { ...task, boardId }],
     }));
   },
 }));

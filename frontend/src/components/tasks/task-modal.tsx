@@ -63,8 +63,6 @@ export function TaskModal() {
     } else {
       form.reset(defaultValues);
     }
-    console.log('CURRENT_TASK -->', JSON.stringify(currentTask, null, 2));
-    console.log('FORM -->', JSON.stringify(form.getValues(), null, 2));
   }, [currentTask, form]);
 
   function onSubmit(values: any) {
@@ -76,13 +74,13 @@ export function TaskModal() {
     console.log('Form submitted:', values);
     if (modalMode === 'default') {
       createTask(payload).then((res) => {
-        addTask(res.id);
+        addTask(res.id, values.boardId);
         closeModal();
       });
     } else {
       if (currentTask?.id) {
         updateTask(payload, currentTask?.id).then((res) => {
-          editTask(currentTask?.id);
+          editTask(currentTask?.id, values.boardId);
           closeModal();
         });
       }
