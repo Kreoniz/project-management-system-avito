@@ -9,6 +9,7 @@ import {
 } from '@/components/ui/sheet';
 import { Menu } from 'lucide-react';
 import { useTaskModalStore } from '@/stores';
+import { ThemeToggle } from '@/components/theme';
 
 export default function Header() {
   const { openModal } = useTaskModalStore();
@@ -41,7 +42,8 @@ export default function Header() {
           </NavLink>
         </nav>
 
-        <div className="hidden items-center md:flex">
+        <div className="hidden items-center gap-2 md:flex">
+          <ThemeToggle />
           <Button onClick={() => openModal(null, 'default')}>Создать тикет</Button>
         </div>
 
@@ -76,6 +78,7 @@ export default function Header() {
                 >
                   Проекты
                 </NavLink>
+
                 <Button className="text-md mt-4 w-full p-4">Создать тикет</Button>
               </div>
             </SheetContent>
