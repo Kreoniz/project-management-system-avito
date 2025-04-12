@@ -11,7 +11,7 @@ import { Menu } from 'lucide-react';
 import { useTaskModalStore } from '@/stores';
 import { ThemeToggle } from '@/components/theme';
 
-export default function Header() {
+export function Header() {
   const { openModal } = useTaskModalStore();
   return (
     <header className="bg-background sticky top-0 z-50 w-full border-b px-2 py-3 shadow-sm sm:px-4">
