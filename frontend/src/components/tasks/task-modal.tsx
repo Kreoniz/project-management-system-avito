@@ -71,7 +71,6 @@ export function TaskModal() {
       boardId: values.boardId ? Number(values.boardId) : undefined,
       assigneeId: values.assigneeId ? Number(values.assigneeId) : undefined,
     };
-    console.log('Form submitted:', values);
     if (modalMode === 'default') {
       createTask(payload).then((res) => {
         addTask(res.id, values.boardId);

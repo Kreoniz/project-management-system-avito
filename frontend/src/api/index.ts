@@ -1,5 +1,6 @@
 import { TStatus } from '@/types';
 import { axiosInstance } from './client';
+import { toast } from 'sonner';
 
 export async function getBoards() {
   try {
@@ -36,7 +37,9 @@ export async function createTask(data: any) {
     const response = await axiosInstance.post('/tasks/create', { ...data });
     return response.data;
   } catch (error) {
-    console.error('Не получилось создать тикет:', error);
+    const errorText = 'Не получилось создать тикет';
+    console.error(`${errorText}: ${error}`);
+    toast.error(errorText);
     throw error;
   }
 }
@@ -46,7 +49,9 @@ export async function updateTask(data: any, id: number) {
     const response = await axiosInstance.put(`/tasks/update/${id}`, { ...data });
     return response.data;
   } catch (error) {
-    console.error('Не получилось изменить тикет:', error);
+    const errorText = 'Не получилось изменить тикет';
+    console.error(`${errorText}: ${error}`);
+    toast.error(errorText);
     throw error;
   }
 }

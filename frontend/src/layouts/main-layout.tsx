@@ -1,6 +1,7 @@
 import Header from '@/components/layout/header';
 import { Outlet } from 'react-router';
 import { TaskModal } from '@/components/tasks';
+import { Toaster } from '@/components/ui/sonner';
 
 export function MainLayout() {
   return (
@@ -12,6 +13,7 @@ export function MainLayout() {
         </div>
 
         <TaskModal />
+        <Toaster position="top-center" />
       </main>
     </>
   );
