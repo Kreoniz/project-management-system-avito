@@ -79,7 +79,7 @@ export function TaskModal() {
       });
     } else {
       if (currentTask?.id) {
-        updateTask(payload, currentTask?.id).then((res) => {
+        updateTask(payload, currentTask?.id).then(() => {
           editTask(currentTask?.id, values.boardId);
           closeModal();
         });

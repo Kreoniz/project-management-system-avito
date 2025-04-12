@@ -1,6 +1,4 @@
-import { useState, useEffect } from 'react';
-import { getBoardTasks } from '@/api';
-import { ITask } from '@/types';
+import { useEffect } from 'react';
 import { Task } from '@/components/tasks';
 import { useLocation, useParams } from 'react-router';
 
@@ -21,7 +19,7 @@ export function BoardPage() {
 
   useEffect(() => {
     fetchBoardTasks(Number(id));
-  }, [fetchBoardTasks]);
+  }, [id, fetchBoardTasks]);
 
   const columns = {
     Backlog: boardTasks.filter((task) => task.status === 'Backlog'),
