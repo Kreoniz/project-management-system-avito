@@ -1,29 +1,28 @@
 import { useEffect, useState } from 'react';
-import { getBoards } from '@/api';
 import { IBoard } from '@/types';
 import { Board } from '@/components/boards/';
+import { useAppStore } from '@/stores';
+import { BoardSkeleton } from '@/components/skeletons';
 
 export function BoardsPage() {
-  const [boards, setBoards] = useState([]);
+  const { boards, fetchBoards } = useAppStore();
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const fetchBoards = async () => {
-      try {
-        const data = await getBoards();
-        setBoards(data);
-      } catch (err) {
-        console.error(err);
-      }
-    };
+    async function load() {
+      setIsLoading(true);
+      await fetchBoards();
+      setIsLoading(false);
+    }
 
-    fetchBoards();
-  }, []);
+    load();
+  }, [fetchBoards]);
 
   return (
     <div className="flex flex-col gap-3">
-      {boards.map((board: IBoard) => (
-        <Board key={board.id} {...board} />
-      ))}
+      {isLoading
+        ? [...Array(5)].map((_, index) => <BoardSkeleton key={index} />)
+        : boards.map((board: IBoard) => <Board key={board.id} {...board} />)}
     </div>
   );
 }

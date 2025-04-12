@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Task } from '@/components/tasks';
 import { useLocation, useParams } from 'react-router';
 
@@ -11,14 +11,22 @@ import {
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
 import { useAppStore } from '@/stores';
+import { TaskSkeleton } from '@/components/skeletons';
 
 export function BoardPage() {
   const { boardTasks, fetchBoardTasks } = useAppStore();
   const { id } = useParams<{ id: string }>();
   const state = useLocation().state;
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    fetchBoardTasks(Number(id));
+    async function load() {
+      setIsLoading(true);
+      await fetchBoardTasks(Number(id));
+      setIsLoading(false);
+    }
+
+    load();
   }, [id, fetchBoardTasks]);
 
   const columns = {
@@ -57,10 +65,16 @@ export function BoardPage() {
                 {columnLabels[status as keyof typeof columnLabels]}
               </h3>
               <div className="flex flex-col gap-3">
-                {tasks.length > 0 ? (
-                  tasks.map((task) => <Task key={task.id} {...task} variant="compact" />)
+                {isLoading ? (
+                  [...Array(10)].map((_, index) => <TaskSkeleton key={index} />)
                 ) : (
-                  <p className="text-sm text-gray-500 italic">Нет задач</p>
+                  <>
+                    {tasks.length > 0 ? (
+                      tasks.map((task) => <Task key={task.id} {...task} variant="compact" />)
+                    ) : (
+                      <p className="text-sm text-gray-500 italic">Нет задач</p>
+                    )}
+                  </>
                 )}
               </div>
             </div>
