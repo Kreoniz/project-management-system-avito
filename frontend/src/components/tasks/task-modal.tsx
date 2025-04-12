@@ -1,6 +1,6 @@
 import { NavLink } from 'react-router';
 import { SquareArrowOutUpRight } from 'lucide-react';
-import { useTaskModalStore } from '@/stores';
+import { useTaskModalStore, useAppStore } from '@/stores';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -26,49 +26,68 @@ import { Status } from './status';
 import { Priority } from './priority';
 import { useForm } from 'react-hook-form';
 import { useEffect } from 'react';
-import { createTask, updateTask, getUsers, getBoards } from '@/api';
+import { createTask, updateTask } from '@/api';
 
 const defaultValues = {
   title: '',
   description: '',
-  priority: '',
-  status: '',
-  assignee: { fullName: '' },
+  priority: 'Low',
+  status: 'Backlog',
+  assigneeId: -1,
   boardId: -1,
-  boardName: '',
 };
 
 export function TaskModal() {
   const { modalMode, isOpen, closeModal, currentTask } = useTaskModalStore();
+  const { boards, fetchBoards, users, fetchUsers, addTask, editTask } = useAppStore();
 
   const form = useForm({
     defaultValues,
   });
 
   useEffect(() => {
+    fetchBoards();
+    fetchUsers();
+  }, []);
+
+  useEffect(() => {
     if (currentTask) {
       form.reset({
         title: currentTask.title || '',
         description: currentTask.description || '',
-        priority: currentTask.priority || '',
-        status: currentTask.status || '',
-        assignee: currentTask.assignee || { fullName: '' },
+        priority: currentTask.priority || 'Low',
+        status: currentTask.status || 'Backlog',
+        assigneeId: currentTask.assignee?.id || -1,
         boardId: currentTask.boardId || -1,
-        boardName: currentTask.boardName || '',
       });
     } else {
       form.reset(defaultValues);
     }
+    console.log('CURRENT_TASK -->', JSON.stringify(currentTask, null, 2));
+    console.log('FORM -->', JSON.stringify(form.getValues(), null, 2));
   }, [currentTask, form]);
 
-  const onSubmit = (values: any) => {
+  function onSubmit(values: any) {
+    const payload = {
+      ...values,
+      boardId: values.boardId ? Number(values.boardId) : undefined,
+      assigneeId: values.assigneeId ? Number(values.assigneeId) : undefined,
+    };
     console.log('Form submitted:', values);
-    if (currentTask) {
-      updateTask(values);
+    if (modalMode === 'default') {
+      createTask(payload).then((res) => {
+        addTask(res.id);
+        closeModal();
+      });
     } else {
-      createTask(values);
+      if (currentTask?.id) {
+        updateTask(payload, currentTask?.id).then((res) => {
+          editTask(currentTask?.id);
+          closeModal();
+        });
+      }
     }
-  };
+  }
 
   return (
     <Dialog open={isOpen} onOpenChange={closeModal}>
@@ -113,14 +132,14 @@ export function TaskModal() {
 
             <FormField
               control={form.control}
-              name="boardName"
+              name="boardId"
               render={({ field }) => (
                 <FormItem className="flex-1">
                   <FormLabel className="text-muted-foreground">Проект</FormLabel>
                   <Select
                     disabled={modalMode === 'board'}
                     onValueChange={field.onChange}
-                    value={field.value}
+                    defaultValue={String(field.value)}
                   >
                     <FormControl>
                       <SelectTrigger className="w-full">
@@ -130,7 +149,11 @@ export function TaskModal() {
                     <SelectContent>
                       <SelectGroup>
                         <SelectLabel className="text-muted-foreground">Проект</SelectLabel>
-                        <SelectItem value={field.value || ' '}>{field.value}</SelectItem>
+                        {boards.map((board) => (
+                          <SelectItem key={board.id} value={String(board.id)}>
+                            {board.name}
+                          </SelectItem>
+                        ))}
                       </SelectGroup>
                     </SelectContent>
                   </Select>
@@ -146,7 +169,11 @@ export function TaskModal() {
                 render={({ field }) => (
                   <FormItem className="flex-1">
                     <FormLabel className="text-muted-foreground">Приоритет</FormLabel>
-                    <Select onValueChange={field.onChange} value={field.value}>
+                    <Select
+                      disabled={modalMode === 'default'}
+                      onValueChange={field.onChange}
+                      value={field.value}
+                    >
                       <FormControl>
                         <SelectTrigger className="w-full">
                           <SelectValue placeholder="Выбрать приоритет" />
@@ -178,7 +205,11 @@ export function TaskModal() {
                 render={({ field }) => (
                   <FormItem className="flex-1">
                     <FormLabel className="text-muted-foreground">Статус</FormLabel>
-                    <Select onValueChange={field.onChange} value={field.value}>
+                    <Select
+                      disabled={modalMode === 'default'}
+                      onValueChange={field.onChange}
+                      value={field.value}
+                    >
                       <FormControl>
                         <SelectTrigger className="w-full">
                           <SelectValue placeholder="Выбрать статус" />
@@ -207,11 +238,11 @@ export function TaskModal() {
 
             <FormField
               control={form.control}
-              name="assignee"
+              name="assigneeId"
               render={({ field }) => (
                 <FormItem className="flex-1">
                   <FormLabel className="text-muted-foreground">Исполнитель</FormLabel>
-                  <Select onValueChange={field.onChange} value={field.value?.fullName}>
+                  <Select defaultValue={String(field.value)} onValueChange={field.onChange}>
                     <FormControl>
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder="Выбрать исполнителя" />
@@ -220,7 +251,11 @@ export function TaskModal() {
                     <SelectContent>
                       <SelectGroup>
                         <SelectLabel className="text-muted-foreground">Исполнитель</SelectLabel>
-                        <SelectItem value="assigneeValue">{field.value?.fullName}</SelectItem>
+                        {users.map((user) => (
+                          <SelectItem key={user.id} value={String(user.id)}>
+                            {user.fullName}
+                          </SelectItem>
+                        ))}
                       </SelectGroup>
                     </SelectContent>
                   </Select>

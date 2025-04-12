@@ -10,7 +10,8 @@ export interface ITask {
   description: string;
   priority: TPriority;
   status: TStatus;
-  assignee: IAssignee;
+  assignee?: IAssignee;
+  assigneeId?: number;
   boardId: number;
   boardName: string;
 }

@@ -1,27 +1,17 @@
-import { useState, useEffect } from 'react';
-import { getTasks } from '@/api';
-import { ITask } from '@/types';
+import { useEffect } from 'react';
+import { useAppStore } from '@/stores';
 import { Task } from '@/components/tasks';
 
 export function TasksPage() {
-  const [tasks, setTasks] = useState([]);
+  const { tasks, fetchTasks } = useAppStore();
 
   useEffect(() => {
-    const fetchTasks = async () => {
-      try {
-        const data = await getTasks();
-        setTasks(data);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-
     fetchTasks();
-  }, []);
+  }, [fetchTasks]);
 
   return (
     <div className="flex flex-col gap-3">
-      {tasks.map((task: ITask) => (
+      {tasks.map((task) => (
         <Task key={task.id} {...task} />
       ))}
     </div>

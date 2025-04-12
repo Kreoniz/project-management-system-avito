@@ -21,7 +21,7 @@ export async function getTasks() {
   }
 }
 
-export async function getBoardTasks(boardId: string) {
+export async function getBoardTasks(boardId: number) {
   try {
     const response = await axiosInstance.get(`/boards/${boardId}`);
     return response.data;
@@ -41,9 +41,9 @@ export async function createTask(data: any) {
   }
 }
 
-export async function updateTask(data: any) {
+export async function updateTask(data: any, id: number) {
   try {
-    const response = await axiosInstance.put(`/tasks/update/${data.id}`, { ...data });
+    const response = await axiosInstance.put(`/tasks/update/${id}`, { ...data });
     return response.data;
   } catch (error) {
     console.error('Не получилось изменить тикет:', error);
@@ -67,6 +67,16 @@ export async function getUsers() {
     return response.data;
   } catch (error) {
     console.error('Не получилось получить информацию о пользователях:', error);
+    throw error;
+  }
+}
+
+export async function getTaskById(id: number) {
+  try {
+    const response = await axiosInstance.get(`/tasks/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error('Не получилось получить информацию о задаче:', error);
     throw error;
   }
 }

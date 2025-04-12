@@ -12,31 +12,21 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
+import { useAppStore } from '@/stores';
 
 export function BoardPage() {
-  const [tasks, setTasks] = useState<ITask[]>([]);
+  const { boardTasks, fetchBoardTasks } = useAppStore();
   const { id } = useParams<{ id: string }>();
   const state = useLocation().state;
 
   useEffect(() => {
-    const fetchTasks = async () => {
-      try {
-        if (id) {
-          const data = await getBoardTasks(id);
-          setTasks(data);
-        }
-      } catch (err) {
-        console.error(err);
-      }
-    };
-
-    fetchTasks();
-  }, [id]);
+    fetchBoardTasks(Number(id));
+  }, [fetchBoardTasks]);
 
   const columns = {
-    Backlog: tasks.filter((task) => task.status === 'Backlog'),
-    InProgress: tasks.filter((task) => task.status === 'InProgress'),
-    Done: tasks.filter((task) => task.status === 'Done'),
+    Backlog: boardTasks.filter((task) => task.status === 'Backlog'),
+    InProgress: boardTasks.filter((task) => task.status === 'InProgress'),
+    Done: boardTasks.filter((task) => task.status === 'Done'),
   };
 
   const columnLabels = {
