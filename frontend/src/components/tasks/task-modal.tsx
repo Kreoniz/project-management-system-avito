@@ -75,21 +75,24 @@ export function TaskModal() {
   }, [currentTask, form]);
 
   function onSubmit(values: any) {
+    const controller = new AbortController();
     const payload = {
       ...values,
       boardId: values.boardId ? Number(values.boardId) : undefined,
       assigneeId: values.assigneeId ? Number(values.assigneeId) : undefined,
     };
     if (modalMode === 'default') {
-      createTask(payload).then((res) => {
-        addTask(res.id, values.boardId);
+      createTask(payload, controller).then((res) => {
+        addTask(res.id, values.boardId, controller);
         closeModal();
       });
     } else {
       if (currentTask?.id) {
-        updateTask(payload, currentTask?.id).then(() => {
-          editTask(currentTask?.id, values.boardId);
-          closeModal();
+        updateTask(payload, currentTask?.id, controller).then(() => {
+          if (currentTask?.id) {
+            editTask(currentTask.id, values.boardId, controller);
+            closeModal();
+          }
         });
       }
     }

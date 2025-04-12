@@ -69,11 +69,11 @@ export function Task({
           className={`flex max-w-full items-center gap-2 ${variant === 'compact' ? '' : 'sm:flex-row-reverse'}`}
         >
           <img
-            src={assignee.avatarUrl}
-            alt={assignee.fullName}
+            src={assignee?.avatarUrl}
+            alt={assignee?.fullName}
             className="h-8 w-8 rounded-full object-cover"
           />
-          <div className="text-muted-foreground truncate text-sm">{assignee.fullName}</div>
+          <div className="text-muted-foreground truncate text-sm">{assignee?.fullName}</div>
         </div>
       </div>
     </div>

@@ -11,8 +11,8 @@ interface TaskStore {
   fetchBoardTasks: (boardId: number, controller: AbortController) => Promise<void>;
   fetchBoards: (controller: AbortController) => Promise<void>;
   fetchUsers: (controller: AbortController) => Promise<void>;
-  addTask: (id: number, boardId: number) => void;
-  editTask: (id: number, boardId: number) => void;
+  addTask: (id: number, boardId: number, controller: AbortController) => void;
+  editTask: (id: number, boardId: number, controller: AbortController) => void;
 }
 
 export const useAppStore = create<TaskStore>((set) => ({
@@ -65,16 +65,16 @@ export const useAppStore = create<TaskStore>((set) => ({
     }
   },
 
-  addTask: async (id, boardId) => {
-    const task = await getTaskById(id);
+  addTask: async (id, boardId, controller) => {
+    const task = await getTaskById(id, { signal: controller?.signal });
     set((state) => ({
       tasks: [...state.tasks, { ...task, boardId }],
       boardTasks: [...state.boardTasks, { ...task, boardId }],
     }));
   },
 
-  editTask: async (id, boardId) => {
-    const task = await getTaskById(id);
+  editTask: async (id, boardId, controller) => {
+    const task = await getTaskById(id, { signal: controller?.signal });
     set((state) => ({
       tasks: [...state.tasks.filter((t) => t.id !== id), { ...task, boardId }],
       boardTasks: [...state.boardTasks.filter((t) => t.id !== id), { ...task, boardId }],
