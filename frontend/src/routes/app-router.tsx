@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router';
 import { MainLayout } from '@/layouts/main-layout';
-import { HomePage, TasksPage, BoardsPage, BoardPage } from '@/pages';
+import { HomePage, TasksPage, BoardsPage, BoardPage, NotFoundPage } from '@/pages';
 
 export function AppRouter() {
   return (
@@ -11,6 +11,7 @@ export function AppRouter() {
           <Route path="issues" element={<TasksPage />} />
           <Route path="boards" element={<BoardsPage />} />
           <Route path="board/:id" element={<BoardPage />} />
+          <Route path="*" element={<NotFoundPage />} />
         </Route>
       </Routes>
     </BrowserRouter>
