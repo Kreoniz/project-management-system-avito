@@ -1,14 +1,15 @@
-version: '3.9'
+version: '3.8'
 
 services:
   backend:
     build:
       context: ./server
       dockerfile: Dockerfile
+    container_name: backend
     ports:
       - "8080:8080"
     volumes:
-      - ./server:/app
+      - ./server/data:/app/data
     networks:
       - app-network
 
@@ -16,12 +17,13 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+    container_name: frontend
     ports:
       - "3000:80"
-    networks:
-      - app-network
     depends_on:
       - backend
+    networks:
+      - app-network
 
 networks:
   app-network:
