@@ -11,8 +11,22 @@ import { Menu } from 'lucide-react';
 import { useTaskModalStore } from '@/stores';
 import { ThemeToggle } from '@/components/theme';
 
+const NAV_LINKS = [
+  {
+    to: '/issues',
+    label: 'Все тикеты',
+    activeMatcher: (isActive: boolean) => isActive,
+  },
+  {
+    to: '/boards',
+    label: 'Проекты',
+    activeMatcher: () => location.pathname.startsWith('/boards'),
+  },
+];
+
 export function Header() {
   const { openModal } = useTaskModalStore();
+
   return (
     <header className="bg-background sticky top-0 z-50 w-full border-b px-2 py-3 shadow-sm sm:px-4">
       <div className="container mx-auto flex items-center justify-between">
@@ -21,25 +35,18 @@ export function Header() {
         </NavLink>
 
         <nav className="hidden text-lg font-semibold md:flex md:gap-6">
-          <NavLink
-            to="/issues"
-            className={({ isActive }) =>
-              `hover:text-primary transition-colors hover:underline ${isActive ? 'text-primary' : 'text-muted-foreground'}`
-            }
-          >
-            Все тикеты
-          </NavLink>
-
-          <NavLink
-            to="/boards"
-            className={() =>
-              `hover:text-primary transition-colors hover:underline ${
-                location.pathname.startsWith('/boards') ? 'text-primary' : 'text-muted-foreground'
-              }`
-            }
-          >
-            Проекты
-          </NavLink>
+          {NAV_LINKS.map((link) => (
+            <NavLink
+              to={link.to}
+              className={({ isActive }) =>
+                `hover:text-primary transition-colors hover:underline ${
+                  link.activeMatcher(isActive) ? 'text-primary' : 'text-muted-foreground'
+                }`
+              }
+            >
+              {link.label}
+            </NavLink>
+          ))}
         </nav>
 
         <div className="hidden items-center gap-2 md:flex">
@@ -58,28 +65,25 @@ export function Header() {
               <SheetTitle>Меню</SheetTitle>
 
               <div className="mt-2 flex flex-col text-lg font-semibold">
-                <NavLink
-                  to="/issues"
-                  className={({ isActive }) =>
-                    `hover:text-primary my-2 transition-colors hover:underline ${isActive ? 'text-primary' : 'text-muted-foreground'}`
-                  }
-                >
-                  Все тикеты
-                </NavLink>
-                <NavLink
-                  to="/boards"
-                  className={() =>
-                    `hover:text-primary transition-colors hover:underline ${
-                      location.pathname.startsWith('/boards')
-                        ? 'text-primary'
-                        : 'text-muted-foreground'
-                    }`
-                  }
-                >
-                  Проекты
-                </NavLink>
+                {NAV_LINKS.map((link) => (
+                  <NavLink
+                    to={link.to}
+                    className={({ isActive }) =>
+                      `hover:text-primary my-2 transition-colors hover:underline ${
+                        link.activeMatcher(isActive) ? 'text-primary' : 'text-muted-foreground'
+                      }`
+                    }
+                  >
+                    {link.label}
+                  </NavLink>
+                ))}
 
-                <Button className="text-md mt-4 w-full p-4">Создать тикет</Button>
+                <Button
+                  onClick={() => openModal(null, 'default')}
+                  className="text-md mt-4 w-full p-4"
+                >
+                  Создать тикет
+                </Button>
               </div>
             </SheetContent>
 

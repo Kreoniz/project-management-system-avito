@@ -35,7 +35,7 @@ export function HomePage() {
         <Card>
           <CardHeader>
             <Ticket className="mb-2 h-8 w-8" />
-            <CardTitle>Умные тикеты</CardTitle>
+            <CardTitle>Тикеты</CardTitle>
             <CardDescription>Легко создавайте и распределяйте задачи</CardDescription>
           </CardHeader>
         </Card>
