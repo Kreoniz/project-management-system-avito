@@ -25,7 +25,7 @@ export function Task({
 
   return (
     <div
-      className={`hover:bg-foreground/10 flex w-full flex-col rounded-md border-2 shadow-sm transition sm:items-start sm:justify-between ${variant === 'compact' ? 'gap-3 p-3 text-sm' : 'gap-6 p-4 sm:flex-row'}`}
+      className={`hover:bg-foreground/10 flex w-full touch-pan-y flex-col rounded-md border-2 shadow-sm transition sm:items-start sm:justify-between ${variant === 'compact' ? 'gap-3 p-3 text-sm' : 'gap-6 p-4 sm:flex-row'}`}
     >
       <div className="flex flex-1 flex-col gap-2">
         <p className="text-base font-semibold sm:text-lg">{title}</p>
