@@ -15,7 +15,7 @@ export function Header() {
   const { openModal } = useTaskModalStore();
   return (
     <header className="bg-background sticky top-0 z-50 w-full border-b px-2 py-3 shadow-sm sm:px-4">
-      <div className="mx-auto flex max-w-7xl items-center justify-between">
+      <div className="container mx-auto flex items-center justify-between">
         <NavLink to="" className="text-2xl font-bold hover:underline">
           Э!-Тикет
         </NavLink>
