@@ -27,23 +27,43 @@ import { Priority } from './priority';
 import { useForm } from 'react-hook-form';
 import { useEffect, useRef, useState } from 'react';
 import { createTask, updateTask } from '@/api';
+import * as z from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+
+const formSchema = z.object({
+  title: z.string().min(1, { message: 'Название обязательно' }),
+  description: z.string().min(1, { message: 'Описание обязательно' }),
+  priority: z.enum(['Low', 'Medium', 'High']),
+  status: z.enum(['Backlog', 'InProgress', 'Done']),
+  assigneeId: z.string().min(1, { message: 'Выберите исполнителя' }),
+  boardId: z.string().min(1, { message: 'Выберите проект' }),
+});
 
 type FormValues = {
   title: string;
   description: string;
-  priority: string;
-  status: string;
-  assigneeId: string | null;
-  boardId: string | null;
+  priority: 'Low' | 'Medium' | 'High';
+  status: 'Backlog' | 'InProgress' | 'Done';
+  assigneeId: string;
+  boardId: string;
 };
 
-const defaultValues: FormValues = {
+type ApiFormValues = {
+  title: string;
+  description: string;
+  priority: 'Low' | 'Medium' | 'High';
+  status: 'Backlog' | 'InProgress' | 'Done';
+  assigneeId: number | null;
+  boardId: number | null;
+};
+
+const defaultValues: Partial<FormValues> = {
   title: '',
   description: '',
   priority: 'Low',
   status: 'Backlog',
-  assigneeId: null,
-  boardId: null,
+  assigneeId: '',
+  boardId: '',
 };
 
 export function TaskModal() {
@@ -51,6 +71,7 @@ export function TaskModal() {
   const { boards, fetchBoards, users, fetchUsers, addTask, editTask } = useAppStore();
 
   const form = useForm<FormValues>({
+    resolver: zodResolver(formSchema),
     defaultValues,
   });
 
@@ -95,8 +116,8 @@ export function TaskModal() {
             description: currentTask.description || '',
             priority: currentTask.priority || 'Low',
             status: currentTask.status || 'Backlog',
-            assigneeId: currentTask.assignee?.id ? String(currentTask.assignee.id) : null,
-            boardId: currentTask.boardId ? String(currentTask.boardId) : null,
+            assigneeId: currentTask.assignee?.id ? String(currentTask.assignee.id) : '',
+            boardId: currentTask.boardId ? String(currentTask.boardId) : '',
           }
         : defaultValues);
 
@@ -121,8 +142,8 @@ export function TaskModal() {
           description: currentTask.description || '',
           priority: currentTask.priority || 'Low',
           status: currentTask.status || 'Backlog',
-          assigneeId: currentTask.assignee?.id ? String(currentTask.assignee.id) : null,
-          boardId: currentTask.boardId ? String(currentTask.boardId) : null,
+          assigneeId: currentTask.assignee?.id ? String(currentTask.assignee.id) : '',
+          boardId: currentTask.boardId ? String(currentTask.boardId) : '',
         }
       : defaultValues;
 
@@ -132,8 +153,11 @@ export function TaskModal() {
 
   function onSubmit(values: FormValues) {
     const controller = new AbortController();
-    const payload = {
-      ...values,
+    const payload: ApiFormValues = {
+      title: values.title,
+      description: values.description,
+      priority: values.priority,
+      status: values.status,
       boardId: values.boardId ? Number(values.boardId) : null,
       assigneeId: values.assigneeId ? Number(values.assigneeId) : null,
     };
@@ -157,6 +181,7 @@ export function TaskModal() {
       });
     }
   }
+
   if (!isInitialized && isOpen) {
     return null;
   }
@@ -186,9 +211,13 @@ export function TaskModal() {
                     Название тикета
                   </FormLabel>
                   <FormControl>
-                    <Input id="taskName" {...field} />
+                    <Input
+                      id="taskName"
+                      {...field}
+                      className={form.formState.errors.title ? 'border-red-500' : ''}
+                    />
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage className="text-red-500" />
                 </FormItem>
               )}
             />
@@ -202,9 +231,13 @@ export function TaskModal() {
                     Описание
                   </FormLabel>
                   <FormControl>
-                    <Textarea className="h-36 resize-none" id="taskDescription" {...field} />
+                    <Textarea
+                      className={`h-36 resize-none ${form.formState.errors.description ? 'border-red-500' : ''}`}
+                      id="taskDescription"
+                      {...field}
+                    />
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage className="text-red-500" />
                 </FormItem>
               )}
             />
@@ -218,10 +251,12 @@ export function TaskModal() {
                   <Select
                     disabled={modalMode === 'board'}
                     onValueChange={field.onChange}
-                    value={field.value || ''}
+                    value={field.value}
                   >
                     <FormControl>
-                      <SelectTrigger className="w-full">
+                      <SelectTrigger
+                        className={`w-full ${form.formState.errors.boardId ? 'border-red-500' : ''}`}
+                      >
                         <SelectValue placeholder="Привязать проект" />
                       </SelectTrigger>
                     </FormControl>
@@ -236,7 +271,7 @@ export function TaskModal() {
                       </SelectGroup>
                     </SelectContent>
                   </Select>
-                  <FormMessage />
+                  <FormMessage className="text-red-500" />
                 </FormItem>
               )}
             />
@@ -250,7 +285,9 @@ export function TaskModal() {
                     <FormLabel className="text-muted-foreground">Приоритет</FormLabel>
                     <Select onValueChange={field.onChange} value={field.value}>
                       <FormControl>
-                        <SelectTrigger className="w-full">
+                        <SelectTrigger
+                          className={`w-full ${form.formState.errors.priority ? 'border-red-500' : ''}`}
+                        >
                           <SelectValue placeholder="Выбрать приоритет" />
                         </SelectTrigger>
                       </FormControl>
@@ -269,7 +306,7 @@ export function TaskModal() {
                         </SelectGroup>
                       </SelectContent>
                     </Select>
-                    <FormMessage />
+                    <FormMessage className="text-red-500" />
                   </FormItem>
                 )}
               />
@@ -286,7 +323,9 @@ export function TaskModal() {
                       value={field.value}
                     >
                       <FormControl>
-                        <SelectTrigger className="w-full">
+                        <SelectTrigger
+                          className={`w-full ${form.formState.errors.status ? 'border-red-500' : ''}`}
+                        >
                           <SelectValue placeholder="Выбрать статус" />
                         </SelectTrigger>
                       </FormControl>
@@ -305,7 +344,7 @@ export function TaskModal() {
                         </SelectGroup>
                       </SelectContent>
                     </Select>
-                    <FormMessage />
+                    <FormMessage className="text-red-500" />
                   </FormItem>
                 )}
               />
@@ -317,9 +356,11 @@ export function TaskModal() {
               render={({ field }) => (
                 <FormItem className="flex-1">
                   <FormLabel className="text-muted-foreground">Исполнитель</FormLabel>
-                  <Select onValueChange={field.onChange} value={field.value || ''}>
+                  <Select onValueChange={field.onChange} value={field.value}>
                     <FormControl>
-                      <SelectTrigger className="w-full">
+                      <SelectTrigger
+                        className={`w-full ${form.formState.errors.assigneeId ? 'border-red-500' : ''}`}
+                      >
                         <SelectValue placeholder="Выбрать исполнителя" />
                       </SelectTrigger>
                     </FormControl>
@@ -334,10 +375,11 @@ export function TaskModal() {
                       </SelectGroup>
                     </SelectContent>
                   </Select>
-                  <FormMessage />
+                  <FormMessage className="text-red-500" />
                 </FormItem>
               )}
             />
+
             {modalMode === 'all' && (
               <NavLink
                 onClick={closeModal}
