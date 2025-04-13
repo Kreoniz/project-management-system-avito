@@ -100,7 +100,7 @@ export function BoardPage() {
 
       <div className="rounded-lg outline max-lg:overflow-x-scroll">
         <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-          <div className="flex gap-4 lg:grid lg:grid-cols-3">
+          <div className="grid grid-flow-col gap-4">
             {Object.entries(columns).map(([status, tasks]) => (
               <div key={status} id={status} className="flex h-full flex-col">
                 <DroppableColumn id={status} className="flex h-full flex-col gap-3">
