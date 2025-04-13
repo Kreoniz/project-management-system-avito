@@ -115,3 +115,11 @@ docker-compose.yml      # Конфигурация Docker
 ```bash
 docker-compose up --build
 ```
+
+## Дизайн и скриншоты
+
+Перед тем, как приступить к разработке, был набросан дизайн примерный дизайн десктопной и мобильной версии в [excalidraw](https://excalidraw.com/), было принято решение на мобильных устройствах показывать меню-бургер
+
+![Дизайн для ПК](https://github.com/kreoniz/project-management-system-avito/raw/main/images/design-desktop.png)
+
+![Дизайн для мобильных устройств](https://github.com/kreoniz/project-management-system-avito/raw/main/images/design-mobile.png)
