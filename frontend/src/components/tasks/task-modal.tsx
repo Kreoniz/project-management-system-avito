@@ -33,8 +33,8 @@ type FormValues = {
   description: string;
   priority: string;
   status: string;
-  assigneeId: string;
-  boardId: string;
+  assigneeId: string | null;
+  boardId: string | null;
 };
 
 const defaultValues: FormValues = {
@@ -42,8 +42,8 @@ const defaultValues: FormValues = {
   description: '',
   priority: 'Low',
   status: 'Backlog',
-  assigneeId: '-1',
-  boardId: '-1',
+  assigneeId: null,
+  boardId: null,
 };
 
 export function TaskModal() {
@@ -95,8 +95,8 @@ export function TaskModal() {
             description: currentTask.description || '',
             priority: currentTask.priority || 'Low',
             status: currentTask.status || 'Backlog',
-            assigneeId: currentTask.assignee?.id ? String(currentTask.assignee.id) : '-1',
-            boardId: currentTask.boardId ? String(currentTask.boardId) : '-1',
+            assigneeId: currentTask.assignee?.id ? String(currentTask.assignee.id) : null,
+            boardId: currentTask.boardId ? String(currentTask.boardId) : null,
           }
         : defaultValues);
 
@@ -121,8 +121,8 @@ export function TaskModal() {
           description: currentTask.description || '',
           priority: currentTask.priority || 'Low',
           status: currentTask.status || 'Backlog',
-          assigneeId: currentTask.assignee?.id ? String(currentTask.assignee.id) : '-1',
-          boardId: currentTask.boardId ? String(currentTask.boardId) : '-1',
+          assigneeId: currentTask.assignee?.id ? String(currentTask.assignee.id) : null,
+          boardId: currentTask.boardId ? String(currentTask.boardId) : null,
         }
       : defaultValues;
 
@@ -134,8 +134,8 @@ export function TaskModal() {
     const controller = new AbortController();
     const payload = {
       ...values,
-      boardId: values.boardId !== '-1' ? Number(values.boardId) : null,
-      assigneeId: values.assigneeId !== '-1' ? Number(values.assigneeId) : null,
+      boardId: values.boardId ? Number(values.boardId) : null,
+      assigneeId: values.assigneeId ? Number(values.assigneeId) : null,
     };
 
     const cleanup = () => {
@@ -218,7 +218,7 @@ export function TaskModal() {
                   <Select
                     disabled={modalMode === 'board'}
                     onValueChange={field.onChange}
-                    value={field.value}
+                    value={field.value || ''}
                   >
                     <FormControl>
                       <SelectTrigger className="w-full">
@@ -317,7 +317,7 @@ export function TaskModal() {
               render={({ field }) => (
                 <FormItem className="flex-1">
                   <FormLabel className="text-muted-foreground">Исполнитель</FormLabel>
-                  <Select onValueChange={field.onChange} value={field.value}>
+                  <Select onValueChange={field.onChange} value={field.value || ''}>
                     <FormControl>
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder="Выбрать исполнителя" />
