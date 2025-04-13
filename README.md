@@ -79,12 +79,19 @@ docker-compose.yml      # Конфигурация Docker
 - [Tailwind CSS](https://tailwindcss.com) - Удобное решение для стилизации сайтов. Атомарные классы очень просты в применении, не нужно прыгать между HTML и CSS как это делали еще относительно недавно :). Также от части является дизайн системой с хорошими цветами, паддингами и т. д.
 - [shadcn/ui](https://ui.shadcn.com) - Библиотека компонент с классным, минималистичным оформлением по умолчанию. Под капотом Radix UI (который является headless системой), но сами компоненты все скачиваются прямиком в проект - в папку `/src/components/ui/`, что позволяет их кастомизировать как угодно.
 - [React Hook Form](https://react-hook-form.com) - Рекомендуется к использованию shadcn/ui, упрощает работу над динамическими формами.
+- [Zod](https://zod.dev/) - Библиотека для валидации форм, отображаю с помощью нее ошибки при недозаполнении формы
 - [Vitest](https://vitest.dev) + [React Testing Library
 ](https://testing-library.com/) -  Библиотеки для Unit-тестирования 
 - [ESLint](https://eslint.org/) - Помогает ловить ошибки в коде на этапах компиляции/написания кода
 - [Prettier](https://prettier.io/) - Помогает соблюдать consistency в написании кода
+- [dnd kit](https://dndkit.com/) - Библиотека для реакта, облегчающая работу с drag-and-drop, имеет хуки `useDroppable` и `useDraggable`
 
 ## Установка и запуск frontend части
+⚠️ Для настройки API в фронтенд-приложении, нужно создать файл `.env` в папке frontend и добавить следующую строку:
+
+```
+VITE_API=http://localhost:8080/api/v1
+```
 
 1. **Клонировать репозиторий**
    ```bash
@@ -110,11 +117,27 @@ docker-compose.yml      # Конфигурация Docker
    - Запуск тестов: `pnpm test`
 
 ## Запуск проекта
+⚠️ Для настройки API в фронтенд-приложении, нужно создать файл `.env` в папке frontend и добавить следующую строку:
 
-Проект можно развернуть с помощью Docker:
-```bash
-docker-compose up --build
 ```
+VITE_API=http://localhost:8080/api/v1
+```
+
+Проект можно развернуть в двух режимах с помощью Docker:
+
+### Production
+```bash
+docker-compose -f docker-compose.prod.yml up --build
+```
+На `localhost:3000`
+
+или
+
+### Development
+```bash
+docker-compose -f docker-compose.dev.yml up --build
+```
+На `localhost:5173`
 
 ## Дизайн и скриншоты
 
