@@ -39,7 +39,7 @@ export function Task({
       </div>
 
       <div
-        className={`flex w-full flex-wrap items-center justify-between gap-3 sm:w-auto sm:flex-col sm:justify-between sm:text-right ${variant === 'compact' ? 'items-start' : 'sm:items-end'}`}
+        className={`flex w-full flex-wrap items-center justify-between gap-3 sm:w-auto sm:flex-col sm:justify-between sm:text-right ${variant === 'compact' ? 'flex-col items-start' : 'sm:items-end'}`}
       >
         <div className="flex flex-wrap gap-2">
           {location.pathname.startsWith('/issues') && (
