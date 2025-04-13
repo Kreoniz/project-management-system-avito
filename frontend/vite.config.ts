@@ -7,6 +7,11 @@ import { defineConfig as testConfig } from 'vitest/config';
 // https://vite.dev/config/
 const config = defineConfig({
   plugins: [react(), tailwindcss()],
+  server: {
+    watch: {
+      usePolling: true,
+    },
+  },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
