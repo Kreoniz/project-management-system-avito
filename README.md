@@ -1,7 +1,18 @@
 # Проект: Э!-Тикет
 «Возьми тикет - и не надо будет говорить "Э!"»
 
+![Скрин главного экрана](https://github.com/kreoniz/project-management-system-avito/raw/main/images/homepage-screenshot.png)
+
 Система управления проектами, [тестовое задание на стажировку в авито](https://github.com/avito-tech/tech-internship/tree/main/Tech%20Internships/Frontend/Frontend-trainee-assignment-spring-2025).
+
+## Оглавление
+
+1. [Структура проекта](#структура-проекта)
+2. [Зависимости](#зависимости)
+3. [Установка и запуск frontend части](#установка-и-запуск-frontend-части)
+4. [Запуск проекта](#запуск-проекта)
+5. [Дизайн и скриншоты](#дизайн-и-скриншоты)
+
 
 ## Структура проекта
 
