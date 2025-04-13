@@ -7,7 +7,10 @@ import { defineConfig as testConfig } from 'vitest/config';
 // https://vite.dev/config/
 const config = defineConfig({
   plugins: [react(), tailwindcss()],
+
   server: {
+    host: true,
+    port: 5173,
     watch: {
       usePolling: true,
     },
